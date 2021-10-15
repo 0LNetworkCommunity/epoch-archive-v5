@@ -1,4 +1,4 @@
 SHELL=/bin/bash
-0 22 * * * make cron -f ./epoch-archive/Makefile | tee -a /root/cron.log
+0 22 * * * make cron -f ./epoch-archive/Makefile | tee -a ./cron.log
 
-#* * * * * make cron -f ./epoch-archive/Makefile | tee -a /root/cron.log
+#* * * * * make cron -f ./epoch-archive/Makefile | tee -a ./cron.log

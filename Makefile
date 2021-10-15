@@ -40,6 +40,7 @@ endif
 
 
 LATEST_BACKUP = $(shell ls -a ~/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9')
+
 NEXT_BACKUP = $$((${LATEST_BACKUP} + 1)) 
 
 END_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
@@ -49,16 +50,17 @@ EPOCH_WAYPOINT = $(shell jq -r ".waypoints[0]" ${ARCHIVE_PATH}/${EPOCH}/ep*/epoc
 EPOCH_HEIGHT = $(shell echo ${EPOCH_WAYPOINT} | cut -d ":" -f 1)
 
 check:
-	@if test -z "$$EPOCH"; then \
-		echo "Must provide EPOCH in environment" 1>&2; \
-		exit 1; \
-	fi
-	@echo data-path: ${DATA_PATH}
-	@echo target-db: ${DB_PATH}
-	@echo backup-service-url: ${URL}
-	@echo start-epoch: ${EPOCH}
-	@echo end-epoch: ${END_EPOCH}
-	@echo epoch-height: ${EPOCH_HEIGHT}
+	@echo ${EPOCH_NOW}
+	# @if test -z "$$EPOCH"; then \
+	# 	echo "Must provide EPOCH in environment" 1>&2; \
+	# 	exit 1; \
+	# fi
+	# @echo data-path: ${DATA_PATH}
+	# @echo target-db: ${DB_PATH}
+	# @echo backup-service-url: ${URL}
+	# @echo start-epoch: ${EPOCH}
+	# @echo end-epoch: ${END_EPOCH}
+	# @echo epoch-height: ${EPOCH_HEIGHT}
 
 wipe:
 	sudo rm -rf ${DB_PATH}
@@ -72,6 +74,7 @@ bins:
 	cd ${SOURCE_PATH} && cargo build -p backup-cli --release
 	cp -f ${SOURCE_PATH}/target/release/db-restore /usr/local/bin/db-restore
 	cp -f ${SOURCE_PATH}/target/release/db-backup /usr/local/bin/db-backup
+
 commit:
 	#save to epoch archive repo for testing
 	git add -A && git commit -a -m "epoch archive ${EPOCH} - ${EPOCH_WAYPOINT}" && git push
