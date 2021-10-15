@@ -39,7 +39,7 @@ TRANS_LEN = 1
 endif
 
 
-LATEST_BACKUP = $(shell ls -a /root/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9')
+LATEST_BACKUP = $(shell ls -a ~/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9')
 NEXT_BACKUP = $$((${LATEST_BACKUP} + 1)) 
 
 END_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
@@ -92,8 +92,8 @@ restore-latest:
 backup-all: backup-epoch backup-transaction backup-snapshot
 
 backup-epoch: create-folder
-	# IMPORTANT: The db-restore tool assumes you are running this from the location of your backups (likely the epoch-archive git project)
-	# The manifest file includes OS paths to chunks. Those paths are relative and fail if this is run outside of epoch-archive
+# IMPORTANT: The db-restore tool assumes you are running this from the location of your backups (likely the epoch-archive git project)
+# The manifest file includes OS paths to chunks. Those paths are relative and fail if this is run outside of epoch-archive
 
 	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 epoch-ending --start-epoch ${EPOCH} --end-epoch ${END_EPOCH} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
@@ -124,10 +124,10 @@ restore-yaml:
 
 
 prod-backup:
-	URL=http://167.172.248.37 make backup-all
+	URL=http://34.130.64.207 make backup-all
 
 devnet-backup:
 	URL=http://157.230.15.42 make backup-all
 
 cron:
-	cd /root/epoch-archive/ && git pull &&  EPOCH=${NEXT_BACKUP} make backup-all zip commit 2>&1
+	cd ~/epoch-archive/ && git pull && EPOCH=${NEXT_BACKUP} make backup-all zip commit 2>&1
