@@ -1,15 +1,15 @@
 base:
     # Update this value to the location you want Diem to store its database
-    data_dir: "/root/.0L/"
+    data_dir: "/home/node/.0L/"
     role: "full_node"
     waypoint: 
-        from_config: ""
+        from_config: "1:4b0aa957de20c39b8ed986ea9b38f048651d04675070582a1bd3e87fcc89f357"
 
 execution:
     # Update this to the location to where the genesis.blob is stored, prefer fullpaths
     # Note, this must be paired with a waypoint. If you update your waypoint without a
     # corresponding genesis, the file location should be an empty path.
-    genesis_file_location: ""
+    genesis_file_location: "/home/node/"
 
 full_node_networks:
     - discovery_method: "onchain"
