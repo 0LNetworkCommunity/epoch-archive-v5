@@ -18,44 +18,44 @@ full_node_networks:
       listen_address: "/ip4/0.0.0.0/tcp/6179"
       network_id: "public"
       seed_addrs:
+        324b1deb06ab3e39b43cd12b535b5303:
+          - /ip4/34.123.84.233/tcp/6179/ln-noise-ik/671625178de5351bf4710bb80c89009563689075ea05ba257a9327d07bd4832d/ln-handshake/0
         b61a9033707142f32fd92cf86e672345:
           - /ip4/172.31.29.174/tcp/6179/ln-noise-ik/6869acaffad4a1901a26fd268ebafa7cda92550b6ca32eadab82228c5159d75a/ln-handshake/0
-        d275b9da59f17f8c0d3231322e6e5014:
-          - /ip4/35.230.7.230/tcp/6179/ln-noise-ik/d578327226cc025724e9e5f96a6d33f55c2cfad8713836fa39a8cf7efeaf6a4e/ln-handshake/0
+        38a4865946ca82efdf2210c327faeb78:
+          - /ip4/34.130.72.87/tcp/6179/ln-noise-ik/fbb46bf38cdbc04838bed3c49a2a4438b2563492766af380d8cf0437f4f6ae6c/ln-handshake/0
+        ce88d7ae2f374dd26127b73cfb65f329:
+          - /ip4/134.209.114.98/tcp/6179/ln-noise-ik/2f98d067c709a13dc8179dfc30df90d2862b62a0982b91247074f64c88cbcb67/ln-handshake/0
         29a38825d33a6e3a0cb7dc58bd240921:
-          - /ip4/34.130.153.22/tcp/6179/ln-noise-ik/f2ce22752b28a14477d377a01cd92411defdb303fa17a08a640128864343ed45/ln-handshake/0
+          - /ip4/34.145.88.77/tcp/6179/ln-noise-ik/f2ce22752b28a14477d377a01cd92411defdb303fa17a08a640128864343ed45/ln-handshake/0
+        a9dee6dc45b0c2cd876bc239deb4795c:
+          - /ip4/64.227.6.64/tcp/6179/ln-noise-ik/e09d69b1b651fef0beb97bebcc1973a420964ef92059616246aa3c74001f8144/ln-handshake/0
+        4108bce184d13cba495d42b85c24a643:
+          - /ip4/35.230.40.123/tcp/6179/ln-noise-ik/0f2e8a15abedd16f64d4651e79b572084943bf01a6a49f30928dd9d604790226/ln-handshake/0
+        eb0e286b0e7c9b54ff8a3c79ffe10c32:
+          - /ip4/143.110.217.112/tcp/6179/ln-noise-ik/195969bfa650f5205a8783a9b8e01dc07795f8e2d5db485eacadd647ac553c6c/ln-handshake/0
         4c98c0afae08cd1fe26581c3f091083b:
-          - /ip4/35.204.176.164/tcp/6179/ln-noise-ik/7cc64629542062aa960a04255e235aaf5fd85991bf49712bcd5a702e07fd8f13/ln-handshake/0
-        bd69bd2d1946419a878723869789bb0d:
-          - /ip4/49.51.191.142/tcp/6179/ln-noise-ik/6c8ab0b3a433f9ba2f4a11a4f831cc100d6641ac39b0181947027ca28eb4051a/ln-handshake/0
+          - /ip4/35.231.138.89/tcp/6179/ln-noise-ik/7cc64629542062aa960a04255e235aaf5fd85991bf49712bcd5a702e07fd8f13/ln-handshake/0
         ca81caadc4251ae817dde81ed9977035:
           - /ip4/188.166.23.18/tcp/6179/ln-noise-ik/158e00c70b175ad96af7e4bb946a184d54460af39eda9973e6fe8080a1dfed4d/ln-handshake/0
-        324b1deb06ab3e39b43cd12b535b5303:
-          - /ip4/35.194.70.175/tcp/6179/ln-noise-ik/671625178de5351bf4710bb80c89009563689075ea05ba257a9327d07bd4832d/ln-handshake/0
+        bd69bd2d1946419a878723869789bb0d:
+          - /ip4/49.51.191.142/tcp/6179/ln-noise-ik/6c8ab0b3a433f9ba2f4a11a4f831cc100d6641ac39b0181947027ca28eb4051a/ln-handshake/0
         d0608b5222c8838128cf268f2e59f219:
           - /ip4/161.97.161.236/tcp/6179/ln-noise-ik/532dbd63d27dfc86102fba2b5e840af85ea7ff5bc1807ca495fecfb0e3a28a25/ln-handshake/0
         4ea15a9b0b00c4b0cc28882d0195f207:
           - /ip4/3.141.11.134/tcp/6179/ln-noise-ik/d327c7d6e5322f605a280d3debbf5db424436f9b23d28763afd169ec686fe04e/ln-handshake/0
-        0f9d3f4925c93d3ea316387fc1a1890a:
-          - /ip4/165.22.239.27/tcp/6179/ln-noise-ik/4d225744080cac9785328df843b73dffceafc1f6c2f610e5a791e6694067b968/ln-handshake/0
-        eb0e286b0e7c9b54ff8a3c79ffe10c32:
-          - /ip4/143.110.217.112/tcp/6179/ln-noise-ik/195969bfa650f5205a8783a9b8e01dc07795f8e2d5db485eacadd647ac553c6c/ln-handshake/0
-        ce88d7ae2f374dd26127b73cfb65f329:
-          - /ip4/134.209.114.98/tcp/6179/ln-noise-ik/2f98d067c709a13dc8179dfc30df90d2862b62a0982b91247074f64c88cbcb67/ln-handshake/0
-        38a4865946ca82efdf2210c327faeb78:
-          - /ip4/34.130.72.87/tcp/6179/ln-noise-ik/fbb46bf38cdbc04838bed3c49a2a4438b2563492766af380d8cf0437f4f6ae6c/ln-handshake/0
-        e14cbb40f7a5e4eda20d6d416aac2f26:
-          - /ip4/34.130.64.207/tcp/6179/ln-noise-ik/8e85a295d9217427eaf30dd552b972e28cc1bf1db9c6e7a6fb12e046677d0424/ln-handshake/0
-        4108bce184d13cba495d42b85c24a643:
-          - /ip4/35.230.40.123/tcp/6179/ln-noise-ik/0f2e8a15abedd16f64d4651e79b572084943bf01a6a49f30928dd9d604790226/ln-handshake/0
-        ef9774fab3da351e4af05f0d187e1126:
-          - /ip4/138.197.150.164/tcp/6179/ln-noise-ik/0fb3ea7afac656a01802636fe3c5d481328fa462fb2abb6dbb2402c6fb41594e/ln-handshake/0
-        13f608695afbbecaca2d118fb56e1515:
-          - /ip4/128.199.149.59/tcp/6179/ln-noise-ik/67bcfb2d6d12781d69904c7107777aeb59f68eb843cf538429e22dab13864938/ln-handshake/0
-        a9dee6dc45b0c2cd876bc239deb4795c:
-          - /ip4/64.227.6.64/tcp/6179/ln-noise-ik/e09d69b1b651fef0beb97bebcc1973a420964ef92059616246aa3c74001f8144/ln-handshake/0
         9fd07dcee0550061968e4c2213de730f:
           - /ip4/35.233.185.59/tcp/6179/ln-noise-ik/eac699875537ba2020e1041ec185f3e3dd165623fa31a53bb9ad666a7caefd5f/ln-handshake/0
+        e14cbb40f7a5e4eda20d6d416aac2f26:
+          - /ip4/35.192.123.205/tcp/6179/ln-noise-ik/8e85a295d9217427eaf30dd552b972e28cc1bf1db9c6e7a6fb12e046677d0424/ln-handshake/0
+        13f608695afbbecaca2d118fb56e1515:
+          - /ip4/128.199.149.59/tcp/6179/ln-noise-ik/67bcfb2d6d12781d69904c7107777aeb59f68eb843cf538429e22dab13864938/ln-handshake/0
+        0f9d3f4925c93d3ea316387fc1a1890a:
+          - /ip4/165.22.239.27/tcp/6179/ln-noise-ik/4d225744080cac9785328df843b73dffceafc1f6c2f610e5a791e6694067b968/ln-handshake/0
+        d275b9da59f17f8c0d3231322e6e5014:
+          - /ip4/35.230.7.230/tcp/6179/ln-noise-ik/d578327226cc025724e9e5f96a6d33f55c2cfad8713836fa39a8cf7efeaf6a4e/ln-handshake/0
+        ef9774fab3da351e4af05f0d187e1126:
+          - /ip4/138.197.150.164/tcp/6179/ln-noise-ik/0fb3ea7afac656a01802636fe3c5d481328fa462fb2abb6dbb2402c6fb41594e/ln-handshake/0
 storage:
   address: "127.0.0.1:6666"
   backup_service_address: "127.0.0.1:6186"
