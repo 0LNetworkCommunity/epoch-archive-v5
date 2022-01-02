@@ -133,4 +133,4 @@ devnet-backup:
 	URL=http://157.230.15.42 make backup-all
 
 cron:
-	cd ~/epoch-archive/ && git pull && EPOCH=${NEXT_BACKUP} make backup-all zip commit 2>&1
+	cd ~/epoch-archive/ && git pull && EPOCH=${NEXT_BACKUP} make backup-all zip commit |& tee ~/.0L/logs/backup.log
