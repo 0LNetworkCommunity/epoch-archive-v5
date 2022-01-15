@@ -15,7 +15,7 @@ full_node_networks:
     - discovery_method: "onchain"
       # this allows connections FROM ANYONE ON THE INTERNET
       # necessary to allow public fullnodes to share state.
-      listen_address: "/ip4/0.0.0.0/tcp/6179"
+      listen_address: "/ip4/0.0.0.0/tcp/6178"
       network_id: "public"
       seed_addrs:
         324b1deb06ab3e39b43cd12b535b5303:
