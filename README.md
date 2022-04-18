@@ -106,6 +106,12 @@ EPOCH:  this variable must be set by user before calling makefile.
 
 `EPOCH=30 make restore-all`
 
+VERSION: this variable must be set by user before calling `backup-version` / `restore-version`:
+
+`EPOCH=30 VERSION=12345 make backup-version`
+
+`EPOCH=30 VERSION=12345 make restore-version`
+
 SOURCE_PATH: optional, the path of libra source, for building bins. Will default to `~/libra`
 
 ARCHIVE_PATH: optional, the path of this repo. Will default to `~/epoch-archive`
