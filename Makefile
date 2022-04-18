@@ -142,8 +142,8 @@ restore-version:
 	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} epoch-ending --epoch-ending-manifest ${ARCHIVE_PATH}/${EPOCH}/epoch_ending_${EPOCH}*/epoch_ending.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/state_ver_${EPOCH_HEIGHT}*/state.manifest --state-into-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/transaction_${EPOCH_HEIGHT}*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
-	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ~/backup/txs/state_ver_${VERSION}*/state.manifest --state-into-version ${VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
-	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ~/backup/txs/transaction_${EPOCH_HEIGHT}*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/${VERSION}/state_ver_${VERSION}*/state.manifest --state-into-version ${VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/${VERSION}/transaction_${EPOCH_HEIGHT}*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
 
 
 prod-backup:
