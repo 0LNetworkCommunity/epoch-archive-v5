@@ -70,6 +70,15 @@ create-folder: check
 		mkdir ${ARCHIVE_PATH}/${EPOCH}; \
 	fi
 
+create-version-folder: check
+	@if test -z "$$VERSION"; then \
+	 	echo "Must provide VERSION in environment" 1>&2; \
+	 	exit 1; \
+	fi
+	@if test ! -d ${ARCHIVE_PATH}/${EPOCH}/${VERSION}; then \
+		mkdir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}; \
+	fi
+
 bins:
 	cd ${SOURCE_PATH} && cargo build -p backup-cli --release
 	cp -f ${SOURCE_PATH}/target/release/db-restore /usr/local/bin/db-restore
@@ -124,6 +133,18 @@ restore-yaml:
 	fi
 	cp ${ARCHIVE_PATH}/fullnode_template.node.yaml ${DATA_PATH}/node.yaml
 	sed 's/THE_WAYPOINT/${EPOCH_WAYPOINT}/g' ${DATA_PATH}/node.yaml
+
+backup-version: create-version-folder
+# IMPORTANT: this assumes that EPOCH is already backed up
+	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 transaction --num_transactions $(shell expr ${VERSION} - ${EPOCH_HEIGHT} + 1) --start-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
+	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 state-snapshot --state-version ${VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
+
+restore-version:
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} epoch-ending --epoch-ending-manifest ${ARCHIVE_PATH}/${EPOCH}/epoch_ending_${EPOCH}*/epoch_ending.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/state_ver_${EPOCH_HEIGHT}*/state.manifest --state-into-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/transaction_${EPOCH_HEIGHT}*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/${VERSION}/state_ver_${VERSION}*/state.manifest --state-into-version ${VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/${VERSION}/transaction_${EPOCH_HEIGHT}*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
 
 
 prod-backup:
