@@ -2,7 +2,7 @@ ARCHIVE_PATH="${ARCHIVE_PATH:-$HOME/epoch-archive}"
 
 # clone repo
 if [ -z "$(ls -A ${ARCHIVE_PATH})" ]; then
-    git clone https://github.com/OLSF/epoch-archive.git ${ARCHIVE_PATH} && cd ${ARCHIVE_PATH}
+    git clone https://github.com/1b5d/epoch-archive.git ${ARCHIVE_PATH} && cd ${ARCHIVE_PATH}
 else
     cd ${ARCHIVE_PATH} && git pull
 fi
@@ -15,7 +15,11 @@ SOURCE_PATH="${SOURCE_PATH:-$HOME/libra}"
 DATA_PATH="${DATA_PATH:-$HOME/.0L}"
 DB_PATH="${DB_PATH:-${DATA_PATH}/db}"
 URL="${URL:-http://localhost}"
-EPOCH="${EPOCH:-$((EPOCH_NOW - 1))}"
+if [ ! -z "$DURING_EPOCH" ]; then
+    EPOCH="$((DURING_EPOCH - 1))"
+else
+    EPOCH="${EPOCH:-$((EPOCH_NOW - 1))}"
+fi
 EPOCH_WAYPOINT=$(jq -r ".waypoints[0]" ${ARCHIVE_PATH}/${EPOCH}/ep*/epoch_ending.manifest)
 EPOCH_HEIGHT=$(echo ${EPOCH_WAYPOINT} | cut -d ":" -f 1)
 
