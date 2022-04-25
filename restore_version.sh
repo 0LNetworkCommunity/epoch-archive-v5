@@ -2,7 +2,7 @@ ARCHIVE_PATH="${ARCHIVE_PATH:-$HOME/epoch-archive}"
 
 # clone repo
 if [ -z "$(ls -A ${ARCHIVE_PATH})" ]; then
-    git clone -b backup-version https://github.com/1b5d/epoch-archive.git ${ARCHIVE_PATH} && cd ${ARCHIVE_PATH}
+    git clone https://github.com/OLSF/epoch-archive.git ${ARCHIVE_PATH} && cd ${ARCHIVE_PATH}
 else
     cd ${ARCHIVE_PATH} && git pull
 fi
