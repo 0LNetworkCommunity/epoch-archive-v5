@@ -1,5 +1,6 @@
 SHELL=/bin/bash
-0 16 * * * make cron -f ./epoch-archive/Makefile | tee -a ./cron.log
-# Mainnet epoch happens at approx 15:30 UTC
+# do the daily epoch backup. Version backups depend on this one existing.
+0 0 * * * make cron -f ./epoch-archive/Makefile | tee -a ./cron.log
 
-#* * * * * make cron -f ./epoch-archive/Makefile | tee -a ./cron.log
+# do an hourly backup at 30mins past the hour to add a new height/version to epoch backup.
+30 * * * * make cron-hourly ./epoch-archive/Makefile | tee -a ./cron.log

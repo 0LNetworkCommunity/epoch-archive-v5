@@ -39,6 +39,8 @@ TRANS_LEN = 1
 endif
 
 
+DB_VERSION = $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 2 | cut -d ":" -f 2) 
+
 LATEST_BACKUP = $(shell ls -a ~/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9')
 
 NEXT_BACKUP = $$((${LATEST_BACKUP} + 1)) 
@@ -50,6 +52,9 @@ EPOCH_WAYPOINT = $(shell jq -r ".waypoints[0]" ${ARCHIVE_PATH}/${EPOCH}/ep*/epoc
 ifndef EPOCH_HEIGHT
 EPOCH_HEIGHT = $(shell echo ${EPOCH_WAYPOINT} | cut -d ":" -f 1)
 endif
+
+echo:
+	@echo ${DB_VERSION} 
 
 check:
 	@echo ${EPOCH_NOW}
@@ -149,11 +154,8 @@ restore-version:
 	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/${VERSION}/transaction_${VERSION}*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
 
 
-prod-backup:
-	URL=http://34.130.64.207 make backup-all
-
-devnet-backup:
-	URL=http://157.230.15.42 make backup-all
-
 cron:
-	cd ~/epoch-archive/ && git pull && EPOCH=${NEXT_BACKUP} make backup-all zip commit |& tee ~/.0L/logs/backup.log
+	cd ~/epoch-archive/ && git pull && EPOCH=${NEXT_BACKUP} make backup-all zip commit
+
+cron-hourly:
+	cd ~/epoch-archive/ && git pull && EPOCH=${LATEST_BACKUP} VERSION=${DB_VERSION} make backup-version zip commit
