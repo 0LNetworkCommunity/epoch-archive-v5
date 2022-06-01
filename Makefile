@@ -39,7 +39,7 @@ TRANS_LEN = 1
 endif
 
 
-DB_VERSION = $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 2 | cut -d ":" -f 2) 
+DB_VERSION = $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 2 | cut -d ":" -f 2| xargs) 
 
 LATEST_BACKUP = $(shell ls -a ~/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9')
 
