@@ -92,8 +92,8 @@ bins:
 	cp -f ${SOURCE_PATH}/target/release/db-backup /usr/local/bin/db-backup
 
 commit:
-	#save to epoch archive repo for testing
-	git add -A && git commit -a -m "epoch archive ${EPOCH} - ${EPOCH_WAYPOINT}" && git push
+# save to epoch archive repo for testing
+	git add -A && git commit -a -m "epoch archive ${EPOCH} - ${EPOCH_WAYPOINT} - ${VERSION}" && git push
 
 zip:
 # zip -r ${EPOCH}.zip ${EPOCH}
