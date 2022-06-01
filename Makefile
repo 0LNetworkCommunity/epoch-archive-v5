@@ -1,7 +1,5 @@
 SHELL=/usr/bin/env bash
 
-EPOCH_NOW = $(shell ol query --epoch | cut -f2- -d"H" | (cut -f1 -d"-") | sed 's/[^0-9]*//g' | bc)
-
 ifndef BIN_PATH
 BIN_PATH=~/bin
 endif
@@ -39,11 +37,13 @@ TRANS_LEN = 1
 endif
 
 
-DB_VERSION = $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 2 | cut -d ":" -f 2| xargs) 
+EPOCH_NOW := $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 1 | cut -d ":" -f 2| xargs)
+
+DB_VERSION = $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 2 | cut -d ":" -f 2| xargs)
 
 LATEST_BACKUP = $(shell ls -a ~/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9')
 
-NEXT_BACKUP = $$((${LATEST_BACKUP} + 1)) 
+NEXT_BACKUP = $(shell expr (${LATEST_BACKUP} + 1))
 
 END_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
 
@@ -53,11 +53,7 @@ ifndef EPOCH_HEIGHT
 EPOCH_HEIGHT = $(shell echo ${EPOCH_WAYPOINT} | cut -d ":" -f 1)
 endif
 
-echo:
-	@echo ${DB_VERSION} 
-
 check:
-	@echo ${EPOCH_NOW}
 	# @if test -z "$$EPOCH"; then \
 	# 	echo "Must provide EPOCH in environment" 1>&2; \
 	# 	exit 1; \
@@ -66,9 +62,10 @@ check:
 	# @echo target-db: ${DB_PATH}
 	# @echo backup-service-url: ${URL}
 	# @echo start-epoch: ${EPOCH}
+	# @echo epoch-now: ${EPOCH_NOW}
 	# @echo end-epoch: ${END_EPOCH}
 	# @echo epoch-height: ${EPOCH_HEIGHT}
-
+	# @echo db-version: ${DB_VERSION}
 wipe:
 	sudo rm -rf ${DB_PATH}
 
