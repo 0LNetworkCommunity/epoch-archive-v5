@@ -39,13 +39,13 @@ endif
 
 EPOCH_NOW := $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 1 | cut -d ":" -f 2| xargs)
 
-DB_VERSION = $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 2 | cut -d ":" -f 2| xargs)
+DB_VERSION := $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 2 | cut -d ":" -f 2| xargs)
 
 LATEST_BACKUP = $(shell ls -a ~/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9')
 
 NEXT_BACKUP = $(shell expr (${LATEST_BACKUP} + 1))
 
-END_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
+fEND_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
 
 EPOCH_WAYPOINT = $(shell jq -r ".waypoints[0]" ${ARCHIVE_PATH}/${EPOCH}/ep*/epoch_ending.manifest)
 
@@ -53,19 +53,24 @@ ifndef EPOCH_HEIGHT
 EPOCH_HEIGHT = $(shell echo ${EPOCH_WAYPOINT} | cut -d ":" -f 1)
 endif
 
+ifndef VERSION
+VERSION = ${DB_VERSION}
+endif
+
 check:
-	# @if test -z "$$EPOCH"; then \
-	# 	echo "Must provide EPOCH in environment" 1>&2; \
-	# 	exit 1; \
-	# fi
-	# @echo data-path: ${DATA_PATH}
-	# @echo target-db: ${DB_PATH}
-	# @echo backup-service-url: ${URL}
-	# @echo start-epoch: ${EPOCH}
-	# @echo epoch-now: ${EPOCH_NOW}
-	# @echo end-epoch: ${END_EPOCH}
-	# @echo epoch-height: ${EPOCH_HEIGHT}
-	# @echo db-version: ${DB_VERSION}
+	@if test -z ${EPOCH}; then \
+		echo "Must provide EPOCH in environment" 1>&2; \
+	 	exit 1; \
+	fi
+	@echo data-path: ${DATA_PATH}
+	@echo target-db: ${DB_PATH}
+	@echo backup-service-url: ${URL}
+	@echo start-epoch: ${EPOCH}
+	@echo epoch-now: ${EPOCH_NOW}
+	@echo end-epoch: ${END_EPOCH}
+	@echo epoch-height: ${EPOCH_HEIGHT}
+	@echo db-version: ${DB_VERSION}
+	@echo env-versions: ${VERSION}
 wipe:
 	sudo rm -rf ${DB_PATH}
 
@@ -75,7 +80,7 @@ create-folder: check
 	fi
 
 create-version-folder: check
-	@if test -z "$$VERSION"; then \
+	@if test -z ${VERSION}; then \
 	 	echo "Must provide VERSION in environment" 1>&2; \
 	 	exit 1; \
 	fi
@@ -149,7 +154,6 @@ restore-version: restore-all
 # ${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/transaction_${EPOCH_HEIGHT}*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/${VERSION}/state_ver_${VERSION}*/state.manifest --state-into-version ${VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
-	
 	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/${VERSION}/transaction_${VERSION}*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
 
 
@@ -160,3 +164,4 @@ cron:
 
 cron-hourly:
 	cd ~/epoch-archive/ && git pull && EPOCH=${LATEST_BACKUP} VERSION=${DB_VERSION} make backup-version zip commit
+
