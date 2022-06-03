@@ -45,7 +45,7 @@ LATEST_BACKUP = $(shell ls -a ~/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9
 
 NEXT_BACKUP = $(shell expr (${LATEST_BACKUP} + 1))
 
-fEND_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
+END_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
 
 EPOCH_WAYPOINT = $(shell jq -r ".waypoints[0]" ${ARCHIVE_PATH}/${EPOCH}/ep*/epoch_ending.manifest)
 
