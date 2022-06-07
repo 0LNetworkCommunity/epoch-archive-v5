@@ -44,7 +44,7 @@ DB_VERSION := $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f
 
 LATEST_BACKUP = $(shell ls -a ~/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9')
 
-NEXT_BACKUP = $(shell expr (${LATEST_BACKUP} + 1))
+NEXT_BACKUP = $(shell expr ${LATEST_BACKUP} + 1)
 
 END_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
 
