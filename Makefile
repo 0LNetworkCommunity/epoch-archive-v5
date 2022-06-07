@@ -33,8 +33,9 @@ EPOCH_LEN = 1
 endif
 
 ifndef TRANS_LEN
-TRANS_LEN = 1
+TRANS_LEN = 100
 endif
+
 
 
 EPOCH_NOW := $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 1 | cut -d ":" -f 2| xargs)
@@ -53,6 +54,9 @@ ifndef EPOCH_HEIGHT
 EPOCH_HEIGHT = $(shell echo ${EPOCH_WAYPOINT} | cut -d ":" -f 1)
 endif
 
+# the version to take the snapshot of. Get 100 versions/transactions after the epoch boundary
+EPOCH_SNAPSHOT_VERSION := $(shell expr ${EPOCH_HEIGHT} + 100)
+
 ifndef VERSION
 VERSION = ${DB_VERSION}
 endif
@@ -69,6 +73,7 @@ check:
 	@echo epoch-now: ${EPOCH_NOW}
 	@echo end-epoch: ${END_EPOCH}
 	@echo epoch-height: ${EPOCH_HEIGHT}
+	@echo epoch-snapshot-version: ${EPOCH_SNAPSHOT_VERSION}
 	@echo db-version: ${DB_VERSION}
 	@echo env-versions: ${VERSION}
 wipe:
@@ -119,10 +124,11 @@ backup-epoch: create-folder
 	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 epoch-ending --start-epoch ${EPOCH} --end-epoch ${END_EPOCH} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 backup-transaction: create-folder
-	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 transaction --num_transactions ${TRANS_LEN} --start-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+# Get 200 transactions. Half on on each side of the epoch boundary
+	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 transaction --num_transactions 200 --start-version ${EPOCH_SNAPSHOT_VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 backup-snapshot: create-folder
-	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 state-snapshot --state-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 state-snapshot --state-version ${EPOCH_SNAPSHOT_VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 backup-version: create-version-folder
 # IMPORTANT: this assumes that EPOCH is already backed up
@@ -133,10 +139,10 @@ restore-epoch:
 	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} epoch-ending --epoch-ending-manifest ${ARCHIVE_PATH}/${EPOCH}/epoch_ending_${EPOCH}*/epoch_ending.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 restore-transaction:
-	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/transaction_${EPOCH_HEIGHT}*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/transaction_*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 restore-snapshot:
-	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/state_ver_${EPOCH_HEIGHT}*/state.manifest --state-into-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/state_ver_*/state.manifest --state-into-version ${EPOCH_SNAPSHOT_VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 restore-waypoint:
 	@echo ${EPOCH_WAYPOINT} > ${DATA_PATH}/restore_waypoint
