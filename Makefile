@@ -48,14 +48,14 @@ NEXT_BACKUP = $(shell expr ${LATEST_BACKUP} + 1)
 
 END_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
 
-EPOCH_WAYPOINT = $(shell jq -r ".waypoints[0]" ${ARCHIVE_PATH}/${EPOCH}/ep*/epoch_ending.manifest)
+EPOCH_WAYPOINT := $(shell ol query --epoch | cut -d ":" -f 2-3| xargs)
 
 ifndef EPOCH_HEIGHT
 EPOCH_HEIGHT = $(shell echo ${EPOCH_WAYPOINT} | cut -d ":" -f 1)
 endif
 
 # the version to take the snapshot of. Get 100 versions/transactions after the epoch boundary
-EPOCH_SNAPSHOT_VERSION = $(shell expr ${EPOCH_HEIGHT} + 100)
+# EPOCH_SNAPSHOT_VERSION = $(shell expr ${EPOCH_HEIGHT} + 100)
 
 ifndef VERSION
 VERSION = ${DB_VERSION}
@@ -72,6 +72,7 @@ check:
 	@echo start-epoch: ${EPOCH}
 	@echo epoch-now: ${EPOCH_NOW}
 	@echo end-epoch: ${END_EPOCH}
+	@echo epoch-waypoint: ${EPOCH_WAYPOINT}
 	@echo epoch-height: ${EPOCH_HEIGHT}
 	@echo epoch-snapshot-version: ${EPOCH_SNAPSHOT_VERSION}
 	@echo db-version: ${DB_VERSION}
@@ -125,10 +126,11 @@ backup-epoch: create-folder
 
 backup-transaction: create-folder
 # Get 200 transactions. Half on on each side of the epoch boundary
-	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 transaction --num_transactions 200 --start-version ${EPOCH_SNAPSHOT_VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 transaction --num_transactions 200 --start-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 backup-snapshot: create-folder
-	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 state-snapshot --state-version ${EPOCH_SNAPSHOT_VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+
+	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 state-snapshot --state-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 backup-version: create-version-folder
 # IMPORTANT: this assumes that EPOCH is already backed up
