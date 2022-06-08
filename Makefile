@@ -55,7 +55,7 @@ EPOCH_HEIGHT = $(shell echo ${EPOCH_WAYPOINT} | cut -d ":" -f 1)
 endif
 
 # the version to take the snapshot of. Get 100 versions/transactions after the epoch boundary
-EPOCH_SNAPSHOT_VERSION := $(shell expr ${EPOCH_HEIGHT} + 100)
+EPOCH_SNAPSHOT_VERSION = $(shell expr ${EPOCH_HEIGHT} + 100)
 
 ifndef VERSION
 VERSION = ${DB_VERSION}
