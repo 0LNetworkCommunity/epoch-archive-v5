@@ -54,6 +54,8 @@ ifndef EPOCH_HEIGHT
 EPOCH_HEIGHT = $(shell echo ${EPOCH_WAYPOINT} | cut -d ":" -f 1)
 endif
 
+EPOCH_HEIGHT_FOR_RESTORE = $(shell jq -r ".waypoints[0]" ${ARCHIVE_PATH}/${EPOCH}/ep*/epoch_ending.manifest | cut -d ":" -f 1)
+
 # the version to take the snapshot of. Get 100 versions/transactions after the epoch boundary
 # EPOCH_SNAPSHOT_VERSION = $(shell expr ${EPOCH_HEIGHT} + 100)
 
@@ -74,7 +76,7 @@ check:
 	@echo end-epoch: ${END_EPOCH}
 	@echo epoch-waypoint: ${EPOCH_WAYPOINT}
 	@echo epoch-height: ${EPOCH_HEIGHT}
-	@echo epoch-snapshot-version: ${EPOCH_SNAPSHOT_VERSION}
+	@echo epoch-height-for-restore: ${EPOCH_HEIGHT_FOR_RESTORE}
 	@echo db-version: ${DB_VERSION}
 	@echo env-versions: ${VERSION}
 wipe:
@@ -144,7 +146,7 @@ restore-transaction:
 	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/transaction_*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 restore-snapshot:
-	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/state_ver_*/state.manifest --state-into-version ${EPOCH_SNAPSHOT_VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/state_ver_*/state.manifest --state-into-version ${EPOCH_HEIGHT_FOR_RESTORE} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 restore-waypoint:
 	@echo ${EPOCH_WAYPOINT} > ${DATA_PATH}/restore_waypoint
