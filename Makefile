@@ -128,7 +128,7 @@ backup-epoch: create-folder
 
 backup-transaction: create-folder
 # Get 200 transactions. Half on on each side of the epoch boundary
-	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 transaction --num_transactions 200 --start-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 transaction --num_transactions 20 --start-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 backup-snapshot: create-folder
 
