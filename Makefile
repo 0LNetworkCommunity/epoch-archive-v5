@@ -33,9 +33,8 @@ EPOCH_LEN = 1
 endif
 
 ifndef TRANS_LEN
-TRANS_LEN = 100
+TRANS_LEN = 1
 endif
-
 
 
 EPOCH_NOW := $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 1 | cut -d ":" -f 2| xargs)
@@ -44,20 +43,18 @@ DB_VERSION := $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f
 
 LATEST_BACKUP = $(shell ls -a ~/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9')
 
-NEXT_BACKUP = $(shell expr ${LATEST_BACKUP} + 1)
+NEXT_BACKUP = $(shell expr (${LATEST_BACKUP} + 1))
 
 END_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
 
-EPOCH_WAYPOINT := $(shell ol query --epoch | cut -d ":" -f 2-3| xargs)
+# TODO: Use actual epoch waypoint instead of what is in repo
+#EPOCH_WAYPOINT := $(shell ol query --epoch | cut -d ":" -f 2-3| xargs)
+
+EPOCH_WAYPOINT = $(shell jq -r ".waypoints[0]" ${ARCHIVE_PATH}/${EPOCH}/ep*/epoch_ending.manifest)
 
 ifndef EPOCH_HEIGHT
 EPOCH_HEIGHT = $(shell echo ${EPOCH_WAYPOINT} | cut -d ":" -f 1)
 endif
-
-EPOCH_HEIGHT_FOR_RESTORE = $(shell jq -r ".waypoints[0]" ${ARCHIVE_PATH}/${EPOCH}/ep*/epoch_ending.manifest | cut -d ":" -f 1)
-
-# the version to take the snapshot of. Get 100 versions/transactions after the epoch boundary
-# EPOCH_SNAPSHOT_VERSION = $(shell expr ${EPOCH_HEIGHT} + 100)
 
 ifndef VERSION
 VERSION = ${DB_VERSION}
@@ -74,9 +71,7 @@ check:
 	@echo start-epoch: ${EPOCH}
 	@echo epoch-now: ${EPOCH_NOW}
 	@echo end-epoch: ${END_EPOCH}
-	@echo epoch-waypoint: ${EPOCH_WAYPOINT}
 	@echo epoch-height: ${EPOCH_HEIGHT}
-	@echo epoch-height-for-restore: ${EPOCH_HEIGHT_FOR_RESTORE}
 	@echo db-version: ${DB_VERSION}
 	@echo env-versions: ${VERSION}
 wipe:
@@ -127,11 +122,9 @@ backup-epoch: create-folder
 	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 epoch-ending --start-epoch ${EPOCH} --end-epoch ${END_EPOCH} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 backup-transaction: create-folder
-# Get 10 transactions into the new epoch.
-	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 transaction --num_transactions 10 --start-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 transaction --num_transactions ${TRANS_LEN} --start-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 backup-snapshot: create-folder
-
 	${BIN_PATH}/db-backup one-shot backup --backup-service-address ${URL}:6186 state-snapshot --state-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 backup-version: create-version-folder
@@ -143,10 +136,10 @@ restore-epoch:
 	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} epoch-ending --epoch-ending-manifest ${ARCHIVE_PATH}/${EPOCH}/epoch_ending_${EPOCH}*/epoch_ending.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 restore-transaction:
-	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/transaction_*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/transaction_${EPOCH_HEIGHT}*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 restore-snapshot:
-	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/state_ver_*/state.manifest --state-into-version ${EPOCH_HEIGHT_FOR_RESTORE} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
+	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/state_ver_${EPOCH_HEIGHT}*/state.manifest --state-into-version ${EPOCH_HEIGHT} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}
 
 restore-waypoint:
 	@echo ${EPOCH_WAYPOINT} > ${DATA_PATH}/restore_waypoint
@@ -165,6 +158,9 @@ restore-version: restore-all
 
 	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} state-snapshot --state-manifest ${ARCHIVE_PATH}/${EPOCH}/${VERSION}/state_ver_${VERSION}*/state.manifest --state-into-version ${VERSION} local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
 	${BIN_PATH}/db-restore --target-db-dir ${DB_PATH} transaction --transaction-manifest ${ARCHIVE_PATH}/${EPOCH}/${VERSION}/transaction_${VERSION}*/transaction.manifest local-fs --dir ${ARCHIVE_PATH}/${EPOCH}/${VERSION}
+
+
+
 
 cron:
 	cd ~/epoch-archive/ && git pull && EPOCH=${NEXT_BACKUP} make backup-all zip commit
