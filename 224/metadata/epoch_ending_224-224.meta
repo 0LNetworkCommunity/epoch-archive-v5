@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"EpochEndingBackup":{"first_epoch":224,"last_epoch":224,"first_version":48731264,"last_version":48731264,"manifest":"epoch_ending_224-.a010/epoch_ending.manifest"}}
+=======
+{"EpochEndingBackup":{"first_epoch":224,"last_epoch":224,"first_version":48731264,"last_version":48731264,"manifest":"epoch_ending_224-.d9bd/epoch_ending.manifest"}}
+>>>>>>> main
