@@ -43,7 +43,7 @@ DB_VERSION := $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f
 
 LATEST_BACKUP = $(shell ls -a ~/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9')
 
-NEXT_BACKUP = $(shell expr (${LATEST_BACKUP} + 1))
+NEXT_BACKUP = $(shell echo "${LATEST_BACKUP} + 1" | bc)
 
 END_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
 
@@ -74,6 +74,8 @@ check:
 	@echo epoch-height: ${EPOCH_HEIGHT}
 	@echo db-version: ${DB_VERSION}
 	@echo env-versions: ${VERSION}
+	@echo latest-backup: ${LATEST_BACKUP}
+	@echo next-backup: ${NEXT_BACKUP}
 wipe:
 	sudo rm -rf ${DB_PATH}
 
