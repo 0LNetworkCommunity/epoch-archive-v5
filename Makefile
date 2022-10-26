@@ -59,7 +59,9 @@ endif
 # TODO: Use actual epoch waypoint instead of what is in repo
 #EPOCH_WAYPOINT := $(shell ol query --epoch | cut -d ":" -f 2-3| xargs)
 
+ifndef EPOCH_WAYPOINT
 EPOCH_WAYPOINT = $(shell jq -r ".waypoints[0]" ${ARCHIVE_PATH}/${EPOCH}/ep*/epoch_ending.manifest)
+endif
 
 ifndef EPOCH_HEIGHT
 EPOCH_HEIGHT = $(shell echo ${EPOCH_WAYPOINT} | cut -d ":" -f 1)
@@ -68,6 +70,7 @@ endif
 ifndef VERSION
 VERSION = ${DB_VERSION}
 endif
+
 
 check:
 	@if test -z ${EPOCH}; then \
