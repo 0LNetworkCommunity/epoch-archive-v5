@@ -36,16 +36,25 @@ ifndef TRANS_LEN
 TRANS_LEN = 1
 endif
 
-
+ifndef EPOCH_NOW
 EPOCH_NOW := $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 1 | cut -d ":" -f 2| xargs)
+endif
 
+ifndef DB_VERSION
 DB_VERSION := $(shell db-backup one-shot query node-state | cut -d ":" -d "," -f 2 | cut -d ":" -f 2| xargs)
+endif
 
+ifndef LATEST_BACKUP
 LATEST_BACKUP = $(shell ls -a ~/epoch-archive/ | sort -n | tail -1 | tr -dc '0-9')
+endif
 
+ifndef NEXT_BACKUP
 NEXT_BACKUP = $(shell echo "${LATEST_BACKUP} + 1" | bc)
+endif
 
+ifndef END_EPOCH
 END_EPOCH = $(shell expr ${EPOCH} + ${EPOCH_LEN})
+endif
 
 # TODO: Use actual epoch waypoint instead of what is in repo
 #EPOCH_WAYPOINT := $(shell ol query --epoch | cut -d ":" -f 2-3| xargs)
