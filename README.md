@@ -40,7 +40,7 @@ EPOCH=104 URL=http://[fullnode-ip] make backup-all
 
 # The Archive
 
-This repo keeps archives of 0L database at different block heights. The objective is to archive the state of heights at 1) the end of a calendar month 2) at the time of network updades.
+This repo keeps archives of 0L database at different block heights. The objective is to archive the state of heights at 1) the end of a calendar month 2) at the time of network updates.
 
 The archive is predominantly used for new nodes to join consensus at an advanced waypoint. These backups will also allow for network recovery in catastrophic failure.
 
