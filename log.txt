@@ -1,0 +1,13 @@
+Already up to date.
+fetching current epoch information
+epoch-now: 111 111 0
+bin-path: /home/node/bin
+source-path: /home/node/libra
+archive-path: /home/node/epoch-archive
+data-path: /home/node/.0L
+db-path: /home/node/.0L/db
+url: http://localhost
+epoch: 166
+epoch-waypoint: 37230927:95003da4238dd17f59a4cadf271d3225f87194808888dac2325ed068542d41e8
+epoch-height: 37230927
+version: 37235342
