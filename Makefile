@@ -177,6 +177,7 @@ restore-version: restore-all
 
 
 cron:
+	echo "NOW: ${EPOCH_NOW} NEXT: ${NEXT_BACKUP}"
 	@if [ ${EPOCH_NOW} -gt ${NEXT_BACKUP} ]; then \
 		cd ~/epoch-archive/ && git pull && EPOCH=${NEXT_BACKUP} make backup-all zip commit; \
 	else \
@@ -184,8 +185,14 @@ cron:
                 exit 1; \
 	fi
 cron-nogit:
-	cd ~/epoch-archive/ && EPOCH=${NEXT_BACKUP} make backup-all zip
-
+	echo "NOW: ${EPOCH_NOW} NEXT: ${NEXT_BACKUP}"
+	@if [ ${EPOCH_NOW} -gt ${NEXT_BACKUP} ]; then \
+		cd ~/epoch-archive/ && EPOCH=${NEXT_BACKUP} make backup-all zip; \
+	else \
+		echo "Newer EPOCH boundary is unavailable."; \
+                exit 1; \
+	fi
+	
 cron-hourly:
 	cd ~/epoch-archive/ && git pull && EPOCH=${LATEST_BACKUP} VERSION=${DB_VERSION} make backup-version zip commit
 cron-hourly-nogit:
