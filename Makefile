@@ -185,7 +185,7 @@ cron:
 	fi
 cron-nogit:
 	@if [ ${EPOCH_NOW} -gt ${NEXT_BACKUP} ]; then \
-		cd ~/epoch-archive/ && git pull && EPOCH=${NEXT_BACKUP} make backup-all zip; \
+		cd ~/epoch-archive/ && EPOCH=${NEXT_BACKUP} make backup-all zip; \
 	else \
 		echo "Newer EPOCH boundary is unavailable."; \
                 exit 1; \
