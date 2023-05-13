@@ -2,8 +2,8 @@ SHELL=/bin/bash
 # use the correct path
 PATH=/home/node/bin:/usr/bin:
 
-# do the daily epoch backup. Version backups depend on this one existing.
-0 0 * * * make cron -f ./epoch-archive/Makefile | tee -a ./cron-epoch.log
+# try the daily epoch backup (every :20min). Version backups depend on this one existing.
+20 * * * * cd ~/epoch-archive && make cron -f ~/epoch-archive/Makefile >> ~/epoch-archive-cron-daily.log 2>&1
 
-# do an hourly backup of one transaction (at 30mins past the hour) to add a new height/version to epoch backup.
-30 * * * * make cron-hourly -f ./epoch-archive/Makefile >> ./cron-hourly.log  2>&1
+# do an hourly backup of one transaction (on the :50min every 3 hours) to add a new height/version to epoch backup.
+50 */3 * * * cd ~/epoch-archive && make cron-hourly -f ~/epoch-archive/Makefile >> ~/epoch-archive-cron-hourly.log 2>&1
